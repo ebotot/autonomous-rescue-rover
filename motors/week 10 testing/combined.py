@@ -1,3 +1,4 @@
+
 #Ultrasonic Senor Testing & PIR
 import RPi.GPIO as GPIO
 from gpiozero import MotionSensor
@@ -120,7 +121,7 @@ if __name__ == '__main__':
         while True:
             GPIO.output(TRIG, False)
             print("Waiting for Sensor to Settle...")
-            time.sleep(2)
+            time.sleep(0.2) #change time back up later.
 
             GPIO.output(TRIG, True)
             time.sleep(0.00001)
@@ -140,13 +141,15 @@ if __name__ == '__main__':
 
             if distance < 30: #set the distance of when the motors should stop
                 LED_G.on() #can swtich to motors
-                #motorStop() # ... stop motor
-                turnRight(50)
+                motorStop() # ... stop motor
+                #turnRight(50)
+                
             else:
                 LED_G.off() #can swtich to motors
-                forward(25) # run motor forward
+                forward(35) # run motor forward
                 
     except KeyboardInterrupt: #if there is a keyboardinterrupt (ctrl+c), exit
         print("Cleaning up!")
         LED_R.off()
         GPIO.cleanup()
+
