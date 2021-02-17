@@ -7,52 +7,44 @@ import socket
 
 # IP and port the program will be connecting to
 # TODO: instead of hard-coding let user select
-host = "127.0.0.1"
+host = "DESKTOP-PHEPU7Q"
 port = 62522
 
 
 # This function will be used to initially connect to the socket
-# Returns the 'connection' tuple
+# Returns the client object
 def connect():
     client = socket.socket() # create socket object
     client.connect((host,port))
 
     print("Client socket connected")
-    writer = client.makefile('w') # create write file object for output
-    return (client, writer) # return tuple of both socket and file object
+    return client # return tuple of socket object
 
 
 # This function will be used to disconnect from both socket and file object
 # Takes in the 'connection' tuple
-def disconnect(connection: 'connection'):
-    # separate the tuple for ease of use
-    client = connection[0]
-    writer = connection[1]
-    
+def disconnect(client: 'connection'):
     client.close()
-    writer.close()
     print("Client socket disconnected")
 
     
 # This function will be used to send a message to the socket
 # Done by writing to the file object returned in connect()
-def write(writer: 'file object', message: str):
-    writer.write(message + "\r\n")
-    writer.flush()
+def write(client: 'file object', message: str):
+    client.send(message.encode())
+    ack = client.recv(1024).decode() # to receive the ACK
+    print(ack)
 
 
 # TODO: refactor so that UI is in a separate function instead of main body!
 if __name__ == '__main__':
-    connection = connect()
-    # separate the tuple for ease of use
-    client = connection[0]
-    writer = connection[1]
+    client = connect()
 
     # TODO: maybe take user input instead of predefined message, could be useful later
     print("Sending message:")
-    write(writer, "SAMPLE MESSAGE")
+    write(client, "SAMPLE MESSAGE")
     print("Sending exit message:")
-    write(writer, "exit")
+    write(client, "exit")
         
     disconnect(connection)
     

@@ -4,9 +4,9 @@
 
 import socket
 
-# IP and port the program will be connecting to
+# IP and port of the server
 # TODO: instead of hard-coding let user select
-host = "127.0.0.1"
+host = "0.0.0.0"
 port = 62522
 
 
@@ -14,11 +14,10 @@ port = 62522
 # Returns the 'connection' tuple
 def connect():
     server = socket.socket() # create socket object
-    server.connect((host,port))
+    server.bind((host,port)) # bind the tcp socket to an IP and port
 
     print("Server socket connected")
-    reader = server.makefile('r') # create read file object for output
-    return (server, reader) # return tuple of both socket and file object
+    return server # return tuple of socket object
 
 
 # This function will be used to disconnect from both socket and file object
@@ -26,34 +25,37 @@ def connect():
 def disconnect(connection: 'connection'):
     # separate the tuple for ease of use
     server = connection[0]
-    reader = connection[1]
+    client = connection[1]
     
     server.close()
-    reader.close()
+    client.close()
     print("Server socket disconnected")
 
 
 # This function will be used to read a message from the socket
-# Done by reading a line from the read file object returned in connect()
-def read(reader: 'file object'):
-    return reader.readline()
+# Takes the clientConnection object
+def read(client: 'file object'):
+    return client.recv(1024).decode()
 
 
 # TODO: refactor so that UI is in a separate function instead of main body!
 if __name__ == '__main__':
-    connection = connect()
-    # separate the tuple for ease of use
-    server = connection[0]
-    reader = connection[1]
+    server = connect()
 
+    server.listen(); # listening for connection from client
+    
     while True: # waits for data indefinitely
         print("Waiting for data")
-        data = read(reader)
-
+        (clientConnection, clientAddress) = server.accept(); # accepting from all clients
+        print (str(clientAddress) + " connected!")
+        data = read(clientConnection)
         if data == "exit": # stops when "exit" is sent
             break
+        elif not data:
+            break
         else:
-            print(data) # prints out message to standard output
+            print("data: " + data) # prints out message to standard output
+            clientConnection.send("Received!") # sends ACK 
 
-    disconnect(connection)
+    disconnect((server, clientConnection))
     
