@@ -17,7 +17,7 @@ GPIO.setup(ECHO, GPIO.IN)
 ### Setup GPIO input buttons
 BTN_G = 25              # Pin22, GPIO 25 - Green Button
 
-GPIO.setup([BTN_G, BTN_R], GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
+GPIO.setup(BTN_G, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
 
 
 def interface(): 
