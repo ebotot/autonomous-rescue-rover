@@ -19,6 +19,11 @@ BTN_G = 25              # Pin22, GPIO 25 - Green Button
 
 GPIO.setup(BTN_G, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
 
+def distanceLCD():
+	display.lcd_clear()
+        display.lcd_display_string("Distance :", 1)
+        result = str(distance)+" cm"
+        display.lcd_display_string(result, 2);
 
 def interface(): 
 	display.lcd_clear()
