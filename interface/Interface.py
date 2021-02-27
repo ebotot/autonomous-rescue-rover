@@ -11,11 +11,8 @@ mixer.init()
 ### Load LCD driver to display
 display = lcddriver.lcd()
 
-GPIO.setup(TRIG, GPIO.OUT)
-GPIO.setup(ECHO, GPIO.IN)
-
 ### Setup GPIO input buttons
-BTN_G = 25              # Pin22, GPIO 25 - Green Button
+BTN_G = 25              # Pin22, GPIO 25 - Response Button
 
 GPIO.setup(BTN_G, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
 
